@@ -96,7 +96,7 @@ pipeline {
                             helm upgrade --install "$RELEASE_NAME" "$CHART_PATH" \
                               --namespace "$NAMESPACE" \
                               --values "$VALUES_FILE" \
-                              --set global.namespace="$NAMESPACE"
+                              --set global.namespace="$NAMESPACE" \
                               --wait \
                               --timeout 10m
 

@@ -10,13 +10,13 @@ pipeline {
 
         string(
             name: 'NAMESPACE',
-            defaultValue: 'default',
+            defaultValue: 'alma',
             description: 'Kubernetes namespace'
         )
 
         string(
             name: 'RELEASE_NAME',
-            defaultValue: 'my-app',
+            defaultValue: 'simple-web',
             description: 'Helm release name'
         )
 

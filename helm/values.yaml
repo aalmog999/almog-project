@@ -52,11 +52,11 @@ deployment:
   # Pod resource requests and limits, left to be configured by the user
   resources: 
     requests:
+      cpu: "128m"
+      memory: "128Mi"
+    limits:
       cpu: "256m"
       memory: "512Mi"
-    limits:
-      cpu: "512m"
-      memory: "1Gi"
 
   # Add additional volumes, e. g. for custom themes
   extraVolumes: 

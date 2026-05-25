@@ -1,5 +1,5 @@
 global:
-  namespace: "alma"
+  namespace: "almog"
 # Optionally override the fully qualified name
 fullnameOverride: "simple-web"
 # Optionally override the name

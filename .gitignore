@@ -1,2 +1,4 @@
 *.pem
 **/*.pem
+
+filtered_books.json

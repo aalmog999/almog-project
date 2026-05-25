@@ -103,7 +103,6 @@
                 },
                 "extraVolumes": {
                     "type": "object"
-                    }
                 },
                 "pvcVolumes": {
                     "type": "object"

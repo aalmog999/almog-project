@@ -300,7 +300,8 @@ ingress:
   # Ingress class name
   className: "nginx"
   # Ingress annotations
-  annotations: {}
+  annotations: 
+    nginx.ingress.kubernetes.io/rewrite-target: /
   # Additional Ingress labels
   labels: {}
   # List of rules for the Ingress

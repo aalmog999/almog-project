@@ -152,6 +152,29 @@
                 }
             }
         },
+        "keda_autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "minReplicaCount": {
+                    "type": "integer"
+                },
+                "maxReplicaCount": {
+                    "type": "integer"
+                },
+                "pollingInterval": {
+                    "type": "integer"
+                },
+                "cooldownPeriod": {
+                    "type": "integer"
+                },
+                "triggers": {
+                    "type": "array"
+                }
+            }
+        },
         "autoscaling": {
             "type": "object",
             "properties": {

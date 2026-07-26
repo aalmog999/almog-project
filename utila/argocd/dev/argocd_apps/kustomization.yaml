@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - namespaces
   - grpc-server
-  # - grpc-client
+  - grpc-client

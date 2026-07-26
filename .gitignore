@@ -3,3 +3,18 @@
 
 filtered_books.json
 **/filtered_books.json
+
+# terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+.terraform.lock.hcl
+
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/*.tfplan
+**/crash.log
+**/.terraform.lock.hcl

@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grpc-server
+  namespace: argocd
+spec:
+  project: grpc-server
+  source:
+    repoURL: https://github.com/aalmog999/almog-project
+    targetRevision: main
+    path: utila/argocd/helm
+    helm:
+      releaseName: grpc-server
+      # parameters:
+      #   - name: values
+      #     value: apps/test-app/test-app-values.yaml
+      valueFiles:
+        - ../../../utila/argocd/dev/charts/grpc-server/grpc-server-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: utila
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

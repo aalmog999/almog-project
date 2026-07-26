@@ -1,0 +1,352 @@
+global:
+  namespace: "utila"
+  # The image repository
+  # repository: "457163978739.dkr.ecr.eu-west-1.amazonaws.com"
+# Optionally override the fully qualified name
+fullnameOverride: "grpc-client"
+# Optionally override the name
+nameOverride: "grpc-client"
+# The internal Kubernetes cluster domain
+clusterDomain: cluster.local
+
+deployment:
+  # The number of replicas to create (has no effect if autoscaling enabled)
+  replicas: 1
+  # The service image 
+  image: "europe-west1-docker.pkg.dev/project-595dfcb1-d16e-4c23-83d/utila/grpc-client"
+  # Overrides the service image tag whose default is the chart version
+  tag: "1.0.0"
+  # The service image pull policy
+  imagePullPolicy: "Always"
+  # Image pull secrets for the Pod
+  imagePullSecrets: []
+  # - name: myRegistrKeySecretName
+  # pod update stategy for update or scaling
+  updateStrategy: RollingUpdate
+  # Mapping between IPs and hostnames that will be injected as entries in the Pod's hosts files
+  hostAliases: []
+  # - ip: "1.2.3.4"
+  #   hostnames:
+  #     - "my.host.com"
+  # Pod restart policy. One of `Always`, `OnFailure`, or `Never`
+  restartPolicy: Always
+  ## Overrides the default entrypoint of the service container
+  command: []
+  ## Overrides the default args for the service container
+  args: []
+  # Environment variables for service
+  env: []
+  envFrom: []
+  # - configMapRef:
+  #     name: grpc-client-env-config
+  # - secretRef:
+  #     name: env-secrets
+  # Additional init containers, e. g. for providing custom themes
+  extraInitContainers: []
+  # - name: init-myservice
+  #   image: busybox:1.28
+  #   command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  
+  # Additional sidecar containers, e. g. for a database proxy, such as Google's cloudsql-proxy
+  extraContainers: ""
+  #  Pod priority class name
+  priorityClassName: ""
+  # Pod affinity
+  affinity: "" 
+  # Node labels for Pod assignment
+  nodeSelector: {}
+    # karpenter.sh/nodepool: graviton-spot-general-purpose
+    # karpenter.sh/nodepool: graviton-general-purpose
+  # Node taints to tolerate
+  tolerations: []
+    # - key: nodepools/instance-family-type
+    #   value: graviton-spot
+    #   effect: NoSchedule
+  # Additional Pod labels
+  podLabels: {}
+  # Additional Pod annotations
+  podAnnotations: {}
+    # linkerd.io/inject: disabled
+  # Pod resource requests and limits, left to be configured by the user
+  resources: 
+    requests:
+      cpu: "0.5"
+      memory: "512Mi"
+    limits:
+      cpu: "0.5"
+      memory: "512Mi"
+
+  # Add additional volumes, e. g. for custom themes
+  extraVolumes: 
+    enabled: false
+    volumes: []
+    # - name: azure-global-secrets-from-kv
+    #   csi:
+    #     driver: secrets-store.csi.k8s.io
+    #     readOnly: true
+    #     volumeAttributes:
+    #       secretProviderClass: "azure-global-secrets"
+  # volumes that pvc is created according to the provided data
+  pvcVolumes:
+    enabled: false
+    volumes:
+      vol-1:
+        mountPath: "/volume"
+        accessMode: ReadWriteOnce
+        ## If defined, storageClass: <storageClass>
+        ## If set to "-", storageClass: "", which disables dynamic provisioning
+        ## If undefined (the default) or set to null, no storageClass spec is
+        ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+        ##   GKE, AWS & OpenStack)
+        storageClass: "-"
+        additionalLabels: 
+          # label: "value" 
+        annotations:
+          # "helm.sh/resource-policy": keep
+        storageSize: 8Gi
+        volumeMode: ""
+        volumeName: ""
+
+  # Add additional volumes mounts, e. g. for custom themes
+  extraVolumeMounts: []
+  # - name: kube-api-access-dtn42
+  #   readOnly: true
+  #   mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+  # - name: azure-global-secrets-from-kv
+  #   mountPath: "/mnt/secrets-store-global"
+  #   readOnly: true
+  # Add additional ports, e. g. for admin console or exposing JGroups ports
+  # if extraPorts defind, port is not available (needs to define all ports)
+  extraPorts: []
+  # Annotations for the deployment
+  deploymentAnnotations: {}
+  # Additional labels for the deployment
+  deploymentLabels: {}
+  # Indicates whether information about services should be injected into Pod's environment variables, matching the syntax of Docker links
+  enableServiceLinks: true
+  # SecurityContext for the entire Pod. Every container running in the Pod will inherit this SecurityContext. This might be relevant when other components of the environment inject additional containers into running Pods (service meshes are the most prominent example for this)
+  podSecurityContext: {}
+    # fsGroup: 1000
+
+  # Termination grace period in seconds for service shutdown. Clusters with a large cache might need to extend this to give Infinispan more time to rebalance
+  terminationGracePeriodSeconds: 30
+
+  # SecurityContext for the service container
+  securityContext: {}
+    # runAsUser: 1000
+    # runAsNonRoot: true
+
+  # Lifecycle hooks for the service container
+  lifecycleHooks: {}
+    # postStart:
+    #  exec:
+    #     command:
+    #       - /bin/sh
+    #       - -c
+    #       - ls
+
+  startupProbe:
+    enabled: false
+    failureThreshold: 30
+    periodSeconds: 10
+    # Must specify either one of the following field when enabled
+    httpGet: {}
+    exec: {}
+    tcpSocket: {}
+
+  readinessProbe:
+    enabled: false
+    failureThreshold: 5
+    periodSeconds: 60
+    successThreshold: 1
+    timeoutSeconds: 30
+    initialDelaySeconds: 30
+    # Must specify either one of the following field when enabled
+    httpGet:  #{}
+      path: /health
+      port: 80
+      scheme: HTTP
+    exec: {}
+    tcpSocket: {}
+
+  livenessProbe:
+    enabled: false
+    failureThreshold: 5
+    periodSeconds: 60
+    successThreshold: 1
+    timeoutSeconds: 30
+    initialDelaySeconds: 30
+    # Must specify either one of the following field when enabled
+    httpGet: #{}
+      path: /health
+      port: 80
+      scheme: HTTP
+    exec: {}
+    tcpSocket: {}
+
+# Pod disruption budget
+podDisruptionBudget: {}
+#  maxUnavailable: 1
+#  minAvailable: 1
+
+secret:
+  enabled: false
+  files:
+    # nameSuffix of Secret
+    credentials:
+      annotations: 
+        # key: value
+      additionalLabels: 
+        # label: value
+      mountPath: "/secert-path"
+      data:
+        secretKey1: secretValue1
+        secretKey2: secretValue2
+    # password:
+    #   annotations: 
+    #     key: value
+    #   additionalLabels: 
+    #     label: value
+    #   mountPath: "/secret-path"
+    #   data:
+    #     secretKey1: secretValue1
+    #     secretKey2: secretValue2
+
+vpa:
+  # If `true`, a autoscaling/v2beta2 VerticalPodAutoscaler resource is created
+  enabled: false
+  # Additional VerticalPodAutoscaler labels
+  labels: {}
+  # choose if VPA will update live services with its own resources recommendations.
+  # if "on", VPA will start switching live services. 
+  updateMode: "off"
+
+autoscaling:
+  # If `true`, a autoscaling/v2beta2 HorizontalPodAutoscaler resource is created (requires Kubernetes 1.18 or above)
+  # This disables the `replicas` field in the deployment
+  enabled: false
+  # Additional HorizontalPodAutoscaler labels
+  labels: {}
+  # The minimum and maximum number of replicas for the service deployment
+  minReplicas: 2
+  maxReplicas: 4
+  # The metrics to use for scaling
+  metrics: []
+    # - type: Resource
+    #   resource:
+    #     name: memory
+    #     target:
+    #       type: Utilization
+    #       averageUtilization: 80
+  # The scaling policy to use. This will scale up quickly but only scale down a single Pod per 5 minutes.
+  # This is important because caches are usually only replicated to 2 Pods and if one of those Pods is terminated this will give the cluster time to recover.
+  behavior: {}
+    # scaleDown:
+    #   stabilizationWindowSeconds: 300
+    #   policies: []
+    #     # - type: Pods
+    #     #   value: 1
+    #     #   periodSeconds: 300
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "grpc-client"
+  # Additional annotations for the ServiceAccount
+  annotations: {}
+  # Additional labels for the ServiceAccount
+  labels: {}
+  # Image pull secrets that are attached to the ServiceAccount
+  imagePullSecrets: []
+
+# RBAC rules
+rbac:
+  create: false
+  # Can be either "ClusterRole" or "Role". Default is Role
+  kind: "Role"
+  rules: []
+
+service:
+  # Annotations for headless and HTTP Services
+  annotations: {}
+  # Additional labels for headless and HTTP Services
+  labels: {}
+  # key: value
+  # The Service type
+  type: ClusterIP
+  # Optional IP for the load balancer. Used for services of type LoadBalancer only
+  loadBalancerIP: ""
+  # Service ports
+  ports:
+    port: 80
+    targetPort: 80
+    name: "http"
+  # define extra port if necessary
+  # if extraPorts defind, port is not available (needs to define all ports)
+  extraPorts: []
+  # - protocol: TCP
+  #   port: 8080
+  #   targetPort: 8080
+  #   name: "myport2"
+
+  # When using Service type LoadBalancer, you can restrict source ranges allowed
+  # to connect to the LoadBalancer, e. g. will result in Security Groups
+  # (or equivalent) with inbound source ranges allowed to connect
+  loadBalancerSourceRanges: []
+  # Session affinity
+  # See https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-userspace
+  sessionAffinity: ""
+  # Session affinity config
+  sessionAffinityConfig: {}
+
+ingress:
+  # If `true`, an Ingress is created
+  enabled: false
+  # Ingress class name
+  className: ""
+  # Ingress annotations
+  annotations: {}
+    # kubernetes.io/ingress.class: azure/application-grpc-client
+    # cert-manager.io/cluster-issuer: letsencrypt-test
+    # cert-manager.io/acme-challenge-type: http01
+  # Additional Ingress labels
+  labels: {}
+  # List of rules for the Ingress
+  rules: []
+  # TLS configuration
+  tls: []
+
+## Network policy configuration
+networkPolicy:
+  enabled: false
+  labels: {}
+
+  # Define all other external allowed source
+  # See https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#networkpolicypeer-v1-networking-k8s-io
+  From: []
+  Ports: []
+
+configMap:
+  enabled: false
+  files:
+    # nameSuffix of configMap
+    env-config:
+      additionalLabels: 
+        # label: value
+      annotations: 
+        # key: value
+      mountPath: "/config-mount"
+      data:
+        a: valueA
+    # another configmap if necessary
+    # second-config:
+    #   additionalLabels: 
+    #     # label: value
+    #   annotations: 
+    #     # key: value
+    #   mountPath: "/config-mount"
+    #   data:
+    #     key3: value3
+    #     key4: value4

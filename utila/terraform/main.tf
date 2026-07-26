@@ -211,6 +211,27 @@ module "cloud_service_mesh" {
   ]
 }
 
+resource "google_compute_firewall" "grpc_health_checks" {
+  project = var.project_id
+
+  name      = "${var.environment}-allow-grpc-health-checks"
+  network   = "${var.environment}-proxyless-grpc-vpc"
+  direction = "INGRESS"
+  priority  = 1000
+
+  source_ranges = [
+    "35.191.0.0/16",
+    "130.211.0.0/22",
+  ]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["50051"]
+  }
+
+  description = "Allow Google Cloud health checkers to reach gRPC NEGs"
+}
+
 # resource "google_project_iam_member" "gke_traffic_director_client" {
 #   project = var.project_id
 #   role    = "roles/trafficdirector.client"

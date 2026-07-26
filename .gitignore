@@ -2,3 +2,4 @@
 **/*.pem
 
 filtered_books.json
+**/filtered_books.json

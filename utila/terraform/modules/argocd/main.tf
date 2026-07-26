@@ -4,6 +4,7 @@ resource "kubernetes_namespace_v1" "argocd" {
   }
 }
 
+# First: install Argo CD and its CRDs.
 resource "helm_release" "argocd" {
   name       = "argocd"
   namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
@@ -41,47 +42,56 @@ resource "helm_release" "argocd" {
           type = "ClusterIP"
         }
       }
+    })
+  ]
+}
 
-      extraObjects = [
-        {
-          apiVersion = "argoproj.io/v1alpha1"
-          kind       = "Application"
+# Second: create the root Application only after the CRDs exist.
+resource "helm_release" "app_of_apps" {
+  name       = "argocd-apps"
+  namespace  = kubernetes_namespace_v1.argocd.metadata[0].name
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-apps"
+  version    = var.argocd_apps_chart_version
 
-          metadata = {
-            name      = "app-of-apps"
+  wait    = true
+  atomic  = true
+  timeout = 300
+
+  values = [
+    yamlencode({
+      applications = {
+        "app-of-apps" = {
+          namespace = var.namespace
+          project   = "default"
+
+          source = {
+            repoURL        = var.github_repository_url
+            targetRevision = var.github_repository_branch
+            path           = var.app_of_apps_path
+          }
+
+          destination = {
+            server    = "https://kubernetes.default.svc"
             namespace = var.namespace
           }
 
-          spec = {
-            project = "default"
-
-            source = {
-              repoURL       = var.github_repository_url
-              targetRevision = var.github_repository_branch
-              path           = var.app_of_apps_path
-              directory = {
-                recurse = true
-              }
+          syncPolicy = {
+            automated = {
+              prune    = true
+              selfHeal = true
             }
 
-            destination = {
-              server    = "https://kubernetes.default.svc"
-              namespace = var.namespace
-            }
-
-            syncPolicy = {
-              automated = {
-                prune    = true
-                selfHeal = true
-              }
-
-              syncOptions = [
-                "CreateNamespace=true"
-              ]
-            }
+            syncOptions = [
+              "CreateNamespace=true"
+            ]
           }
         }
-      ]
+      }
     })
+  ]
+
+  depends_on = [
+    helm_release.argocd
   ]
 }

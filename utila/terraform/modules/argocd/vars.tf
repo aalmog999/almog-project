@@ -25,3 +25,9 @@ variable "app_of_apps_path" {
   type        = string
   default     = "utila/argocd"
 }
+
+variable "argocd_apps_chart_version" {
+  description = "Version of the argocd-apps Helm chart"
+  type        = string
+  default     = "2.0.5"
+}

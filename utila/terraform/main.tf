@@ -192,6 +192,11 @@ module "gke" {
 module "argocd" {
   source = "./modules/argocd"
 
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+  
   namespace                = var.argocd_namespace
   chart_version            = var.argocd_chart_version
   github_repository_url    = var.argocd_repository_url

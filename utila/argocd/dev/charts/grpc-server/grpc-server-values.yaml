@@ -70,11 +70,11 @@ deployment:
   # Pod resource requests and limits, left to be configured by the user
   resources: 
     requests:
-      cpu: "0.5"
-      memory: "512Mi"
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: "0.5"
-      memory: "512Mi"
+      cpu: 250m
+      memory: 128Mi
 
   # Add additional volumes, e. g. for custom themes
   extraVolumes: 
@@ -267,7 +267,9 @@ rbac:
 
 service:
   # Annotations for headless and HTTP Services
-  annotations: {}
+  annotations: #{}
+    cloud.google.com/neg: >-
+      {"exposed_ports":{"50051":{"name":"dev-helloworld-grpc"}}}
   # Additional labels for headless and HTTP Services
   labels: {}
   # key: value

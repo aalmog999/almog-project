@@ -35,7 +35,15 @@ deployment:
   ## Overrides the default args for the service container
   args: []
   # Environment variables for service
-  env: []
+  env: 
+    - name: GRPC_TARGET
+      value: xds:///grpc-server.utila.svc.cluster.local:50051
+    - name: HELLO_NAME
+      value: GKE client
+    - name: REQUEST_INTERVAL
+      value: 5s
+    - name: REQUEST_TIMEOUT
+      value: 10s
   envFrom: []
   # - configMapRef:
   #     name: grpc-client-env-config
@@ -70,11 +78,11 @@ deployment:
   # Pod resource requests and limits, left to be configured by the user
   resources: 
     requests:
-      cpu: "0.5"
-      memory: "512Mi"
+      cpu: 25m
+      memory: 32Mi
     limits:
-      cpu: "0.5"
-      memory: "512Mi"
+      cpu: 100m
+      memory: 128Mi
 
   # Add additional volumes, e. g. for custom themes
   extraVolumes: 

@@ -15,7 +15,7 @@ deployment:
   # The service image 
   image: "europe-west1-docker.pkg.dev/project-595dfcb1-d16e-4c23-83d/utila/grpc-server"
   # Overrides the service image tag whose default is the chart version
-  tag: "1.0-1-almog_test"
+  tag: "1.0.0"
   # The service image pull policy
   imagePullPolicy: "Always"
   # Image pull secrets for the Pod

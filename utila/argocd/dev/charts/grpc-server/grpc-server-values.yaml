@@ -268,8 +268,7 @@ rbac:
 service:
   # Annotations for headless and HTTP Services
   annotations: #{}
-    cloud.google.com/neg: >-
-      {"exposed_ports":{"50051":{"name":"dev-helloworld-grpc"}}}
+    cloud.google.com/neg: {"exposed_ports":{"50051":{"name":"dev-helloworld-grpc"}}}
   # Additional labels for headless and HTTP Services
   labels: {}
   # key: value

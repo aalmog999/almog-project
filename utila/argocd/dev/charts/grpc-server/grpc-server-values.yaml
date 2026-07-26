@@ -63,7 +63,8 @@ deployment:
     #   value: graviton-spot
     #   effect: NoSchedule
   # Additional Pod labels
-  podLabels: {}
+  podLabels: #{}
+    service.istio.io/canonical-name: grpc-server
   # Additional Pod annotations
   podAnnotations: {}
     # linkerd.io/inject: disabled

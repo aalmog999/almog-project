@@ -40,6 +40,8 @@ deployment:
       value: xds:///grpc-server.utila.svc.cluster.local:50051
     - name: HELLO_NAME
       value: GKE client
+    - name: GRPC_XDS_BOOTSTRAP
+      value: "/tmp/grpc-xds/td-grpc-bootstrap.json"
     - name: REQUEST_INTERVAL
       value: 5s
     - name: REQUEST_TIMEOUT
@@ -50,7 +52,18 @@ deployment:
   # - secretRef:
   #     name: env-secrets
   # Additional init containers, e. g. for providing custom themes
-  extraInitContainers: []
+  extraInitContainers: #[]
+    - name: grpc-td-init
+      image: gcr.io/trafficdirector-prod/td-grpc-bootstrap:0.19.0
+      imagePullPolicy: Always
+      args:
+        - "--output=/tmp/bootstrap/td-grpc-bootstrap.json"
+        - "--vpc-network-name=dev-proxyless-grpc-vpc"
+        - "--xds-server-uri=trafficdirector.googleapis.com:443"
+        - "--generate-mesh-id"
+      volumeMounts:
+        - name: grpc-td-conf
+          mountPath: /tmp/bootstrap
   # - name: init-myservice
   #   image: busybox:1.28
   #   command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
@@ -71,7 +84,8 @@ deployment:
     #   value: graviton-spot
     #   effect: NoSchedule
   # Additional Pod labels
-  podLabels: {}
+  podLabels: #{}
+    service.istio.io/canonical-name: grpc-client
   # Additional Pod annotations
   podAnnotations: {}
     # linkerd.io/inject: disabled
@@ -85,9 +99,12 @@ deployment:
       memory: 128Mi
 
   # Add additional volumes, e. g. for custom themes
-  extraVolumes: 
-    enabled: false
-    volumes: []
+  extraVolumes: #[]
+    enabled: true
+    volumes:
+      - name: grpc-td-conf
+        emptyDir:
+          medium: Memory
     # - name: azure-global-secrets-from-kv
     #   csi:
     #     driver: secrets-store.csi.k8s.io
@@ -116,7 +133,10 @@ deployment:
         volumeName: ""
 
   # Add additional volumes mounts, e. g. for custom themes
-  extraVolumeMounts: []
+  extraVolumeMounts: #[]
+    - name: grpc-td-conf
+      mountPath: /tmp/grpc-xds
+      readOnly: true
   # - name: kube-api-access-dtn42
   #   readOnly: true
   #   mountPath: /var/run/secrets/kubernetes.io/serviceaccount

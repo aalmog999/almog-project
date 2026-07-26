@@ -60,7 +60,7 @@ deployment:
         - "--output=/tmp/bootstrap/td-grpc-bootstrap.json"
         - "--vpc-network-name=dev-proxyless-grpc-vpc"
         - "--xds-server-uri=trafficdirector.googleapis.com:443"
-        - "--generate-mesh-id"
+        - "--config-mesh=dev-proxyless-grpc-mesh"
       volumeMounts:
         - name: grpc-td-conf
           mountPath: /tmp/bootstrap

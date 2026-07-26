@@ -189,6 +189,45 @@ module "gke" {
   ]
 }
 
+module "cloud_service_mesh" {
+  source = "./modules/cloud-service-mesh"
+
+  providers = {
+    # google      = google
+    google-beta = google-beta
+  }
+
+  project_id               = var.project_id
+  region                   = var.region
+  environment              = var.environment
+  cluster_name             = "${var.environment}-proxyless-grpc-gke"
+  grpc_server_neg_name     = "${var.environment}-helloworld-grpc"
+  grpc_server_hostname     = "grpc-server.utila.svc.cluster.local"
+  grpc_server_port         = 50051
+  max_rate_per_endpoint    = 1000
+
+  depends_on = [
+    module.gke
+  ]
+}
+
+# resource "google_project_iam_member" "gke_traffic_director_client" {
+#   project = var.project_id
+#   role    = "roles/trafficdirector.client"
+#   member  = "serviceAccount:${var.gke_node_service_account}"
+# }
+
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
+resource "google_project_iam_member" "grpc_client_traffic_director" {
+  project = var.project_id
+  role    = "roles/trafficdirector.client"
+
+  member = "principal://iam.googleapis.com/projects/${data.google_project.current.number}/locations/global/workloadIdentityPools/${var.project_id}.svc.id.goog/subject/ns/utila/sa/grpc-client"
+}
+
 module "argocd" {
   source = "./modules/argocd"
 

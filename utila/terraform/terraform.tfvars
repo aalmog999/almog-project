@@ -172,4 +172,6 @@ required_apis = [
   "container.googleapis.com",
   "iam.googleapis.com",
   "serviceusage.googleapis.com",
+  "networkservices.googleapis.com",
+  "trafficdirector.googleapis.com"
 ]

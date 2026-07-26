@@ -246,3 +246,48 @@ For a larger production GCP environment, the recommended solution is **Google Cl
 Linkerd would be recommended if the company wants a simple Kubernetes mesh and accepts sidecars. Envoy would be recommended if the company needs the most advanced traffic-management features or must support many languages and protocols.
 
 If full Istio compatibility, every Envoy feature, or Google's applicable managed-mesh SLA is a strict requirement, the company should use **managed Cloud Service Mesh with Envoy sidecars** instead of proxyless gRPC.
+
+## References
+
+### gRPC and Golang
+
+- [gRPC: Custom Load Balancing Policies](https://grpc.io/docs/guides/custom-load-balancing/)
+- [gRPC: Service Config](https://grpc.io/docs/guides/service-config/)
+- [gRPC: Load Balancing](https://grpc.io/blog/grpc-load-balancing/)
+- [gRPC-Go `roundrobin` package](https://pkg.go.dev/google.golang.org/grpc/balancer/roundrobin)
+- [gRPC-Go xDS example](https://github.com/grpc/grpc-go/tree/master/examples/features/xds)
+- [gRPC xDS feature status by language and version](https://github.com/grpc/grpc/blob/master/doc/grpc_xds_features.md)
+
+### Kubernetes
+
+- [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/)
+- [Kubernetes DNS for Services and Pods](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/)
+- [Kubernetes EndpointSlices](https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/)
+
+### Linkerd
+
+- [Linkerd load balancing](https://linkerd.io/docs/features/load-balancing/)
+- [Linkerd features](https://linkerd.io/docs/features/)
+- [Linkerd: gRPC Load Balancing on Kubernetes](https://linkerd.io/2018/11/14/grpc-load-balancing-on-kubernetes-without-tears/)
+- [Linkerd native sidecars](https://linkerd.io/docs/features/native-sidecars/)
+
+### Envoy
+
+- [Envoy load-balancing overview](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/overview)
+- [Envoy supported load balancers](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/load_balancers)
+- [Envoy request lifecycle](https://www.envoyproxy.io/docs/envoy/latest/intro/life_of_a_request)
+- [Envoy locality-weighted load balancing](https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/upstream/load_balancing/locality_weight)
+
+### Google Cloud Service Mesh
+
+- [Cloud Service Mesh overview](https://docs.cloud.google.com/service-mesh/docs/overview)
+- [Cloud Service Mesh proxyless gRPC overview](https://docs.cloud.google.com/service-mesh/docs/service-routing/proxyless-overview)
+- [Set up proxyless gRPC services](https://docs.cloud.google.com/service-mesh/docs/service-routing/set-up-proxyless-mesh)
+- [Proxyless gRPC supported features](https://docs.cloud.google.com/service-mesh/docs/service-routing/features)
+- [Proxyless gRPC limitations](https://docs.cloud.google.com/service-mesh/docs/service-routing/limitations-proxyless)
+- [Proxyless gRPC security](https://docs.cloud.google.com/service-mesh/docs/service-routing/security-overview)
+- [Proxyless gRPC observability](https://docs.cloud.google.com/service-mesh/docs/service-routing/observability-proxyless-grpc)
+- [Cloud Service Mesh supported platforms](https://docs.cloud.google.com/service-mesh/docs/supported-platforms)
+- [Managed Cloud Service Mesh control plane on GKE](https://docs.cloud.google.com/service-mesh/docs/onboarding/provision-control-plane)
+- [Cloud Service Mesh SLA overview](https://cloud.google.com/service-mesh/sla-overview)
+- [Cloud Service Mesh pricing](https://cloud.google.com/service-mesh/pricing)

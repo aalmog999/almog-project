@@ -15,7 +15,7 @@ spec:
       #   - name: values
       #     value: apps/test-app/test-app-values.yaml
       valueFiles:
-        - ../../../utila/argocd/dev/charts/grpc-server/grpc-server-values.yaml
+        - ../dev/charts/grpc-server/grpc-server-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: utila

@@ -37,7 +37,7 @@ deployment:
   # Environment variables for service
   env: 
     - name: GRPC_TARGET
-      value: xds:///grpc-server.utila.svc.cluster.local:50051
+      value: "xds:///grpc-server.utila.svc.cluster.local"
     - name: HELLO_NAME
       value: GKE client
     - name: GRPC_XDS_BOOTSTRAP
